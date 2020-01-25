@@ -1,11 +1,13 @@
-IMAGE ?= filefrog/ytdl:latest
+IMAGE  ?= filefrog/ytdl:latest
+GITHUB := https://github.com/jhunt/ytdl
 
 .PHONY: default build push
 default: build
 build:
-	docker build -t $(IMAGE) . \
-	  --label org.label-schema.vcs-url="" \
-	  --label org.label-schema.vcs-ref="" \
+	docker build \
+	  --build-arg BUILD_DATE="$(shell date -u --iso-8601)" \
+	  --build-arg VCS_REF="$(shell git rev-parse --short HEAD)" \
+	  -t $(IMAGE) .
 
 push: build
 	docker push $(IMAGE)
